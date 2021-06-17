@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Contact Cloud</string>
     <string name="add_contact_to_the_list">Add Contact to the list.</string>
+    <string name="call_to_the_contact">Call to the Contact</string>
+    <string name="call">Call</string>
 </resources>

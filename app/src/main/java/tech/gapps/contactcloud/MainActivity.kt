@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import tech.gapps.contactcloud.helper.ContactAdapter
 import tech.gapps.contactcloud.model.Contact
 
 class MainActivity : AppCompatActivity() {
@@ -14,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var contactListView: ListView
     private lateinit var addButton: FloatingActionButton
 
-    private lateinit var contactList: List<Contact>
+    private lateinit var contactList: ArrayList<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,21 +31,23 @@ class MainActivity : AppCompatActivity() {
         startListView()
     }
 
-    private fun startContactList(): List<Contact> {
-        val contacts = listOf(
+    private fun startContactList(): ArrayList<Contact> {
+        val contacts = arrayListOf(
             Contact(
                 1,
                 "Gabriel Todaro",
                 "Gabz",
                 123123123,
-                "gabriel.todaro@outlook.com"
+                "gabriel.todaro@outlook.com",
+                "http://i.imgur.com/DvpvklR.png"
             ),
             Contact(
                 2,
                 "Gabriel Patane Todaro",
                 "Gabz1",
                 123123123,
-                "gabriel.todaro@outlook.com"
+                "gabriel.todaro@outlook.com",
+                "http://i.imgur.com/DvpvklR.png"
             )
         )
 
@@ -52,13 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startListView() {
-        val listItems = arrayOfNulls<String>(contactList.size)
-        for (i in 0 until contactList.size) {
-            val contact = contactList[i]
-            listItems[i] = contact.nickname
-        }
-
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listItems)
+        val adapter = ContactAdapter(this, contactList)
         contactListView.adapter = adapter
     }
 }
