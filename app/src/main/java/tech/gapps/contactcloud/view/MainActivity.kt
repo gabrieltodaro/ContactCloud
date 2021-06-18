@@ -1,12 +1,13 @@
-package tech.gapps.contactcloud
+package tech.gapps.contactcloud.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import tech.gapps.contactcloud.R
 import tech.gapps.contactcloud.helper.ContactAdapter
 import tech.gapps.contactcloud.model.Contact
 
@@ -24,7 +25,10 @@ class MainActivity : AppCompatActivity() {
         contactListView = findViewById(R.id.contact_list_view)
         addButton = findViewById(R.id.add_floating_button)
         addButton.setOnClickListener(View.OnClickListener {
-            Toast.makeText(this, "This should navigate to the Create Contact view.", Toast.LENGTH_LONG).show()
+//            Toast.makeText(this, "This should navigate to the Create Contact view.", Toast.LENGTH_LONG).show()
+
+            val intent = ContactDetailActivity().newIntent(this, null)
+            startActivity(intent)
         })
 
         contactList = startContactList()

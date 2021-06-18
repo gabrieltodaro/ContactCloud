@@ -3,4 +3,6 @@
     <string name="add_contact_to_the_list">Add Contact to the list.</string>
     <string name="call_to_the_contact">Call to the Contact</string>
     <string name="call">Call</string>
+    <string name="contact_detail_full_name">Full Name</string>
+    <string name="contact_detail_content_description_full_name">Contact Full Name</string>
 </resources>

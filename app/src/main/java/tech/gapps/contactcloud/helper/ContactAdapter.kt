@@ -42,4 +42,5 @@ class ContactAdapter(private val context: Context,
 
         return rowView
     }
+
 }
