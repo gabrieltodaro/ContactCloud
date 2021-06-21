@@ -3,51 +3,64 @@ package tech.gapps.contactcloud.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
+import android.util.Log
+
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import tech.gapps.contactcloud.R
 import tech.gapps.contactcloud.model.Contact
+import kotlin.random.Random
 
-class ContactDetailActivity : AppCompatActivity() {
+class ContactDetailActivity: AppCompatActivity() {
 
+    private lateinit var moreOptionsFloatingButton: FloatingActionButton
     private lateinit var contactDetailImageView: ImageView
     private lateinit var fullNameEditText: EditText
     private lateinit var nickNameEditText: EditText
     private lateinit var phoneEditText: EditText
     private lateinit var emailEditText: EditText
 
-    private var isEditing = false
-//    private var contact = Contact?
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contact_detail)
 
+        moreOptionsFloatingButton = findViewById(R.id.moreContactDetailFloatingButton)
         contactDetailImageView = findViewById(R.id.contactDetailImageView)
         fullNameEditText = findViewById(R.id.fullNameEditText)
         nickNameEditText = findViewById(R.id.nickNameEditText)
         phoneEditText = findViewById(R.id.phoneEditText)
         emailEditText = findViewById(R.id.emailEditText)
 
-        fullNameEditText.isEnabled = isEditing
-        nickNameEditText.isEnabled = isEditing
-        phoneEditText.isEnabled = isEditing
-        emailEditText.isEnabled = isEditing
+        moreOptionsFloatingButton.setOnClickListener {
+            Toast.makeText(this@ContactDetailActivity, "More options here, but it is saving the user right now.", Toast.LENGTH_SHORT).show()
+            saveContact()
+        }
     }
 
-    fun newIntent(context: Context, contact: Contact?): Intent {
+    fun newIntent(context: Context): Intent {
         val detailIntent = Intent(context, ContactDetailActivity::class.java)
 
-        if (contact == null) {
-            isEditing = true
-        } else {
-            Toast.makeText(this, "Contact is not null", Toast.LENGTH_LONG).show()
-//            this.contact = contact
-        }
-
         return detailIntent
+    }
+
+    private fun saveContact() {
+        val fullName = fullNameEditText.text.toString()
+        val nickName = nickNameEditText.text.toString()
+        val email = emailEditText.text.toString()
+        val phone = phoneEditText.text.toString().toLong()
+
+        val contact = Contact(Random.nextLong(), fullName, nickName, phone, email, "")
+        contactList.add(contact)
+        Toast.makeText(this@ContactDetailActivity, "Contact added successfully!", Toast.LENGTH_SHORT).show()
+        Log.i("Adicionando contato", "Contato ${contact.nickname} adicionado.")
+
+        dismissActivity()
+    }
+
+    private fun dismissActivity() {
+        finish()
     }
 }
