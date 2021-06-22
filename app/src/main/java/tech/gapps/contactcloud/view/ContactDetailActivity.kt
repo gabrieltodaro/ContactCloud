@@ -72,7 +72,7 @@ class ContactDetailActivity: AppCompatActivity() {
 
     }
 
-    fun newIntent(context: Context): Intent {
+    fun newIntent(context: Context, contact: Contact?): Intent {
         val detailIntent = Intent(context, ContactDetailActivity::class.java)
 
         return detailIntent

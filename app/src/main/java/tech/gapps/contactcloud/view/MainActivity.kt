@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         contactListView = findViewById(R.id.contact_list_view)
         addButton = findViewById(R.id.add_floating_button)
         addButton.setOnClickListener(View.OnClickListener {
-            val intent = ContactDetailActivity().newIntent(this)
+            val intent = ContactDetailActivity().newIntent(this, null)
             startActivity(intent)
         })
 
@@ -56,5 +56,19 @@ class MainActivity : AppCompatActivity() {
     private fun startListView() {
         contactAdapter = ContactAdapter(this, contactList)
         contactListView.adapter = contactAdapter
+
+        val context = this
+        contactListView.setOnItemClickListener { _, _, position, _ ->
+            // 1
+            val selectedContact = contactList[position]
+
+            // 2
+            val detailIntent = ContactDetailActivity().newIntent(context, selectedContact)
+
+            // 3
+            startActivity(detailIntent)
+        }
     }
+
+
 }
