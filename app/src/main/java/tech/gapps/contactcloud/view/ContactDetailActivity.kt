@@ -29,6 +29,7 @@ class ContactDetailActivity: AppCompatActivity() {
     private lateinit var emailEditText: EditText
 
     private var isRotate = false
+    private var contact: Contact? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,37 +46,65 @@ class ContactDetailActivity: AppCompatActivity() {
         phoneEditText = findViewById(R.id.phoneEditText)
         emailEditText = findViewById(R.id.emailEditText)
 
-        moreOptionsFloatingButton.setOnClickListener(View.OnClickListener { view ->
-            isRotate = ViewAnimation.rotateFab(view, !isRotate)
-            if(isRotate){
-                ViewAnimation.showIn(saveFloatingButton)
-                ViewAnimation.showIn(callFloatingButton)
-                ViewAnimation.showIn(deleteFloatingButton)
-            }else{
-                ViewAnimation.showOut(saveFloatingButton)
-                ViewAnimation.showOut(callFloatingButton)
-                ViewAnimation.showOut(deleteFloatingButton)
-            }
-        })
-
-        saveFloatingButton.setOnClickListener{
-            saveContact()
+        val bundle = intent.extras
+        bundle?.let {
+            contact = it.get("contact") as Contact
         }
 
-        callFloatingButton.setOnClickListener{
-            Toast.makeText(this@ContactDetailActivity, "Available soon.", Toast.LENGTH_LONG).show()
-        }
-
-        deleteFloatingButton.setOnClickListener{
-            Toast.makeText(this@ContactDetailActivity, "Available soon.", Toast.LENGTH_LONG).show()
-        }
-
+        setActionOnButtons()
+        checkIfNewContact()
     }
 
-    fun newIntent(context: Context, contact: Contact?): Intent {
-        val detailIntent = Intent(context, ContactDetailActivity::class.java)
+    private fun setActionOnButtons() {
+        if (contact != null) {
+            // We should show the more options button
+            moreOptionsFloatingButton.setOnClickListener(View.OnClickListener { view ->
+                isRotate = ViewAnimation.rotateFab(view, !isRotate)
+                if(isRotate){
+                    ViewAnimation.showIn(saveFloatingButton)
+                    ViewAnimation.showIn(callFloatingButton)
+                    ViewAnimation.showIn(deleteFloatingButton)
+                }else{
+                    ViewAnimation.showOut(saveFloatingButton)
+                    ViewAnimation.showOut(callFloatingButton)
+                    ViewAnimation.showOut(deleteFloatingButton)
+                }
+            })
 
-        return detailIntent
+            saveFloatingButton.setOnClickListener{
+                saveContact()
+            }
+
+            callFloatingButton.setOnClickListener{
+                Toast.makeText(this@ContactDetailActivity, "Available soon.", Toast.LENGTH_LONG).show()
+            }
+
+            deleteFloatingButton.setOnClickListener{
+                Toast.makeText(this@ContactDetailActivity, "Available soon.", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            // We should show only the save button.
+            moreOptionsFloatingButton.setImageResource(R.drawable.ic_baseline_save_24)
+            moreOptionsFloatingButton.setOnClickListener{
+                saveContact()
+            }
+        }
+    }
+
+    private fun checkIfNewContact() {
+        contact?.let {
+            fullNameEditText.setText(it.fullName)
+            nickNameEditText.setText(it.nickname)
+            emailEditText.setText(it.email)
+
+            val phoneNumber = "${it.phoneNumber}"
+            phoneEditText.setText(phoneNumber)
+
+            fullNameEditText.isEnabled = false
+            nickNameEditText.isEnabled = false
+            emailEditText.isEnabled = false
+            phoneEditText.isEnabled = false
+        }
     }
 
     private fun saveContact() {

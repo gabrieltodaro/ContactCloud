@@ -1,5 +1,6 @@
 package tech.gapps.contactcloud.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -23,8 +24,10 @@ class MainActivity : AppCompatActivity() {
 
         contactListView = findViewById(R.id.contact_list_view)
         addButton = findViewById(R.id.add_floating_button)
+
+        val context = this
         addButton.setOnClickListener(View.OnClickListener {
-            val intent = ContactDetailActivity().newIntent(this, null)
+            val intent = Intent(context, ContactDetailActivity::class.java)
             startActivity(intent)
         })
 
@@ -59,14 +62,12 @@ class MainActivity : AppCompatActivity() {
 
         val context = this
         contactListView.setOnItemClickListener { _, _, position, _ ->
-            // 1
             val selectedContact = contactList[position]
 
-            // 2
-            val detailIntent = ContactDetailActivity().newIntent(context, selectedContact)
+            val intent = Intent(context, ContactDetailActivity::class.java)
+            intent.putExtra("contact", selectedContact)
 
-            // 3
-            startActivity(detailIntent)
+            startActivity(intent)
         }
     }
 
