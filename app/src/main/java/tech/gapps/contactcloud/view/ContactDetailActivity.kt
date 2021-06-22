@@ -20,7 +20,7 @@ class ContactDetailActivity: AppCompatActivity() {
 
     private lateinit var moreOptionsFloatingButton: FloatingActionButton
     private lateinit var saveFloatingButton: FloatingActionButton
-    private lateinit var editFloatingButton: FloatingActionButton
+    private lateinit var callFloatingButton: FloatingActionButton
     private lateinit var deleteFloatingButton: FloatingActionButton
     private lateinit var contactDetailImageView: ImageView
     private lateinit var fullNameEditText: EditText
@@ -36,7 +36,7 @@ class ContactDetailActivity: AppCompatActivity() {
 
         moreOptionsFloatingButton = findViewById(R.id.moreContactDetailFloatingButton)
         saveFloatingButton = findViewById(R.id.saveOrEditContactDetailFloatingButton)
-        editFloatingButton = findViewById(R.id.callContactDetailFloatingButton)
+        callFloatingButton = findViewById(R.id.callContactDetailFloatingButton)
         deleteFloatingButton = findViewById(R.id.deleteContactDetailFloatingButton)
 
         contactDetailImageView = findViewById(R.id.contactDetailImageView)
@@ -49,14 +49,27 @@ class ContactDetailActivity: AppCompatActivity() {
             isRotate = ViewAnimation.rotateFab(view, !isRotate)
             if(isRotate){
                 ViewAnimation.showIn(saveFloatingButton)
-                ViewAnimation.showIn(editFloatingButton)
+                ViewAnimation.showIn(callFloatingButton)
                 ViewAnimation.showIn(deleteFloatingButton)
             }else{
                 ViewAnimation.showOut(saveFloatingButton)
-                ViewAnimation.showOut(editFloatingButton)
+                ViewAnimation.showOut(callFloatingButton)
                 ViewAnimation.showOut(deleteFloatingButton)
             }
         })
+
+        saveFloatingButton.setOnClickListener{
+            saveContact()
+        }
+
+        callFloatingButton.setOnClickListener{
+            Toast.makeText(this@ContactDetailActivity, "Available soon.", Toast.LENGTH_LONG).show()
+        }
+
+        deleteFloatingButton.setOnClickListener{
+            Toast.makeText(this@ContactDetailActivity, "Available soon.", Toast.LENGTH_LONG).show()
+        }
+
     }
 
     fun newIntent(context: Context): Intent {
