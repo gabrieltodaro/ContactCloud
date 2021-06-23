@@ -1,7 +1,10 @@
 package tech.gapps.contactcloud.view
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,8 +13,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import tech.gapps.contactcloud.R
+import tech.gapps.contactcloud.db.DatabaseHelper
 import tech.gapps.contactcloud.helper.ViewAnimation
 import tech.gapps.contactcloud.model.Contact
 import kotlin.random.Random
@@ -31,6 +37,9 @@ class ContactDetailActivity: AppCompatActivity() {
     private var isRotate = false
     private var isEditing = false
     private var contact: Contact? = null
+    private val requestCall = 1
+
+    private val databaseHandler = DatabaseHelper(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,12 +95,7 @@ class ContactDetailActivity: AppCompatActivity() {
             it.email = email
             it.phoneNumber = phone
 
-            for (i in contactList.indices) {
-                val contact = contactList[i]
-                if (it.id == contact.id) {
-                    contactList[i] = it
-                }
-            }
+            databaseHandler.updateContact(it)
 
             showToast("Contact updated successfully!")
             isEditing = false
@@ -100,10 +104,10 @@ class ContactDetailActivity: AppCompatActivity() {
         }
 
         if (contactHelper == null) {
-            contactHelper = Contact(fullName = fullName, nickname = nickName, email = email, phoneNumber = phone, imageUrl = "")
+            contactHelper = Contact(fullName = fullName, nickname = nickName, email = email, phoneNumber = phone)
         }
 
-        contactList.add(contactHelper!!)
+        databaseHandler.addContact(contactHelper!!)
         showToast("Contact added successfully!")
 
         isEditing = false
@@ -123,12 +127,7 @@ class ContactDetailActivity: AppCompatActivity() {
 
     private fun removeContact() {
         contact?.let {
-            for (i in contactList.indices) {
-                val contact = contactList[i]
-                if (it.id == contact.id) {
-                    contactList.removeAt(i)
-                }
-            }
+            databaseHandler.deleteContact(it.id)
         }
 
         showToast("Contact removed successfully!")
@@ -157,7 +156,9 @@ class ContactDetailActivity: AppCompatActivity() {
             }
 
             callFloatingButton.setOnClickListener{
-                showToast("Available soon.")
+                contact?.let {
+                    makePhoneCall(it)
+                }
                 dismissButtons()
             }
 
@@ -192,5 +193,47 @@ class ContactDetailActivity: AppCompatActivity() {
 
     private fun dismissActivity() {
         finish()
+    }
+
+    /** Call **/
+
+
+    fun makePhoneCall(contact: Contact) {
+        val number: String = contact.phoneNumber.toString()
+        if (number.trim { it <= ' ' }.isNotEmpty()) {
+            if (ContextCompat.checkSelfPermission(
+                            this@ContactDetailActivity,
+                            Manifest.permission.CALL_PHONE
+                    ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                        this@ContactDetailActivity,
+                        arrayOf(Manifest.permission.CALL_PHONE),
+                        requestCall
+                )
+            } else {
+                val dial = "tel:$number"
+                val intent = Intent(Intent.ACTION_CALL, Uri.parse(dial))
+                startActivity(intent)
+            }
+        } else {
+            Toast.makeText(this@ContactDetailActivity, "Enter Phone Number", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String?>,
+            grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == requestCall) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                makePhoneCall()
+                Toast.makeText(this, "Permission ALLOWED, CALL AGAIN", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
