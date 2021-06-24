@@ -1,13 +1,16 @@
 package tech.gapps.contactcloud.view
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Button
 
 import android.widget.EditText
 import android.widget.ImageView
@@ -29,6 +32,7 @@ class ContactDetailActivity: AppCompatActivity() {
     private lateinit var callFloatingButton: FloatingActionButton
     private lateinit var deleteFloatingButton: FloatingActionButton
     private lateinit var contactDetailImageView: ImageView
+    private lateinit var changeImageButton: Button
     private lateinit var fullNameEditText: EditText
     private lateinit var nickNameEditText: EditText
     private lateinit var phoneEditText: EditText
@@ -38,6 +42,8 @@ class ContactDetailActivity: AppCompatActivity() {
     private var isEditing = false
     private var contact: Contact? = null
     private val requestCall = 1
+    private val pickImage = 100
+    private var imageUri: Uri? = null
 
     private val databaseHandler = DatabaseHelper(this)
 
@@ -51,6 +57,7 @@ class ContactDetailActivity: AppCompatActivity() {
         deleteFloatingButton = findViewById(R.id.deleteContactDetailFloatingButton)
 
         contactDetailImageView = findViewById(R.id.contactDetailImageView)
+        changeImageButton = findViewById(R.id.changeImageButton)
         fullNameEditText = findViewById(R.id.fullNameEditText)
         nickNameEditText = findViewById(R.id.nickNameEditText)
         phoneEditText = findViewById(R.id.phoneEditText)
@@ -61,8 +68,21 @@ class ContactDetailActivity: AppCompatActivity() {
             contact = it.get("contact") as Contact
         }
 
+        changeImageButton.setOnClickListener {
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, pickImage)
+        }
+
         setActionOnButtons()
         checkIfNewContact()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage) {
+            imageUri = data?.data
+            contactDetailImageView.setImageURI(imageUri)
+        }
     }
 
     private fun checkIfNewContact() {
@@ -125,6 +145,22 @@ class ContactDetailActivity: AppCompatActivity() {
         reloadMoreOptionsButton()
     }
 
+    private fun showRemoveContactDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Are you sure?")
+        builder.setMessage("Do you really want to remove this contact?")
+
+        builder.setPositiveButton(android.R.string.yes) { _, _ ->
+            removeContact()
+        }
+
+        builder.setNegativeButton(android.R.string.no) { _, _ ->
+            showToast("The contact is still here =)")
+        }
+
+        builder.show()
+    }
+
     private fun removeContact() {
         contact?.let {
             databaseHandler.deleteContact(it.id)
@@ -163,7 +199,7 @@ class ContactDetailActivity: AppCompatActivity() {
             }
 
             deleteFloatingButton.setOnClickListener{
-                removeContact()
+                showRemoveContactDialog()
                 dismissButtons()
             }
         } else {
@@ -196,9 +232,7 @@ class ContactDetailActivity: AppCompatActivity() {
     }
 
     /** Call **/
-
-
-    fun makePhoneCall(contact: Contact) {
+    private fun makePhoneCall(contact: Contact) {
         val number: String = contact.phoneNumber.toString()
         if (number.trim { it <= ' ' }.isNotEmpty()) {
             if (ContextCompat.checkSelfPermission(
