@@ -2,16 +2,14 @@ package tech.gapps.contactcloud.view
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.Button
-
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -23,7 +21,6 @@ import tech.gapps.contactcloud.R
 import tech.gapps.contactcloud.db.DatabaseHelper
 import tech.gapps.contactcloud.helper.ViewAnimation
 import tech.gapps.contactcloud.model.Contact
-import kotlin.random.Random
 
 class ContactDetailActivity: AppCompatActivity() {
 
@@ -176,11 +173,11 @@ class ContactDetailActivity: AppCompatActivity() {
             // We should show the more options button
             moreOptionsFloatingButton.setOnClickListener(View.OnClickListener { view ->
                 isRotate = ViewAnimation.rotateFab(view, !isRotate)
-                if(isRotate){
+                if (isRotate) {
                     ViewAnimation.showIn(saveFloatingButton)
                     ViewAnimation.showIn(callFloatingButton)
                     ViewAnimation.showIn(deleteFloatingButton)
-                }else{
+                } else {
                     dismissButtons()
                 }
             })
@@ -204,6 +201,7 @@ class ContactDetailActivity: AppCompatActivity() {
             }
         } else {
             // We should show only the save button.
+            changeImageButton.visibility = View.VISIBLE
             moreOptionsFloatingButton.setImageResource(R.drawable.ic_baseline_save_24)
             moreOptionsFloatingButton.setOnClickListener{
                 saveContact()
@@ -222,6 +220,7 @@ class ContactDetailActivity: AppCompatActivity() {
     }
 
     private fun dismissButtons() {
+        isRotate = ViewAnimation.rotateFab(moreOptionsFloatingButton, !isRotate)
         ViewAnimation.showOut(saveFloatingButton)
         ViewAnimation.showOut(callFloatingButton)
         ViewAnimation.showOut(deleteFloatingButton)
