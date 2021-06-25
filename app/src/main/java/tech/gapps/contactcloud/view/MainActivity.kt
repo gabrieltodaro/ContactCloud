@@ -6,12 +6,15 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ListView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.parse.Parse
+import com.parse.ParseObject
 import tech.gapps.contactcloud.R
 import tech.gapps.contactcloud.db.DatabaseHelper
 import tech.gapps.contactcloud.helper.ContactAdapter
@@ -32,6 +35,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Parse.initialize(
+            Parse.Configuration.Builder(this)
+                .applicationId(getString(R.string.back4app_app_id))
+                .clientKey(getString(R.string.back4app_client_key))
+                .server(getString(R.string.back4app_server_url))
+                .build())
+
+        val firstObject = ParseObject("FirstClass")
+        firstObject.put("message","Hey ! First message from android. Parse is now connected")
+        firstObject.saveInBackground {
+            if (it != null){
+                it.localizedMessage?.let { message -> Log.e("MainActivity", message) }
+            } else{
+                Log.d("MainActivity","Object saved.")
+            }
+        }
 
         contactListView = findViewById(R.id.contact_list_view)
         addButton = findViewById(R.id.add_floating_button)

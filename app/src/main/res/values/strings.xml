@@ -21,4 +21,10 @@
     <string name="phone">Phone</string>
     <string name="contact_email">Contact Email</string>
     <string name="email">E-mail</string>
+
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+
+    <!-- Change the following strings as required -->
+    <string name="back4app_app_id">AmQn2R1v9SPqnMtmPL0eCU5utF3IUC48JsGrg5s8</string>
+    <string name="back4app_client_key">1NaCgvWyQhbgTZO88gLWZZBh4yWnNHNG3bxCIY7w</string>
 </resources>

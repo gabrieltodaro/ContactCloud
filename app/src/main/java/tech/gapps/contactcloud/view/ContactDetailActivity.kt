@@ -115,6 +115,7 @@ class ContactDetailActivity: AppCompatActivity() {
 
             val updated = this.getText(R.string.contact_updated) as String
             showToast(updated)
+            it.createObject()
             isEditing = false
             dismissActivity()
             return
