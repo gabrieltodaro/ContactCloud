@@ -56,8 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startContactList() {
-        // This function will retrieve the contact list from database and/or backend.
-
         contactList.clear()
         contactList.addAll(databaseHandler.listAllContacts())
 
@@ -97,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         } else {
-            Toast.makeText(this@MainActivity, "Enter Phone Number", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, R.string.call_error_empty_phone, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -110,9 +108,9 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == requestCall) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                makePhoneCall()
-                Toast.makeText(this, "Permission ALLOWED, CALL AGAIN", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.call_permission_granted, Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.call_permission_denied, Toast.LENGTH_SHORT).show()
             }
         }
     }

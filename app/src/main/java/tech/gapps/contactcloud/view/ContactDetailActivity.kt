@@ -105,7 +105,6 @@ class ContactDetailActivity: AppCompatActivity() {
         val email = emailEditText.text.toString()
         val phone = phoneEditText.text.toString().toLong()
 
-        var contactHelper: Contact? = null
         contact?.let {
             it.fullName = fullName
             it.nickname = nickName
@@ -114,18 +113,16 @@ class ContactDetailActivity: AppCompatActivity() {
 
             databaseHandler.updateContact(it)
 
-            showToast("Contact updated successfully!")
+            val updated = this.getText(R.string.contact_updated) as String
+            showToast(updated)
             isEditing = false
             dismissActivity()
             return
         }
 
-        if (contactHelper == null) {
-            contactHelper = Contact(fullName = fullName, nickname = nickName, email = email, phoneNumber = phone)
-        }
-
-        databaseHandler.addContact(contactHelper!!)
-        showToast("Contact added successfully!")
+        databaseHandler.addContact(Contact(fullName = fullName, nickname = nickName, email = email, phoneNumber = phone))
+        val added = this.getText(R.string.contact_added) as String
+        showToast(added)
 
         isEditing = false
         dismissActivity()
@@ -144,15 +141,16 @@ class ContactDetailActivity: AppCompatActivity() {
 
     private fun showRemoveContactDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Are you sure?")
-        builder.setMessage("Do you really want to remove this contact?")
+        builder.setTitle(R.string.contact_remove_alert_title)
+        builder.setMessage(R.string.contact_remove_alert_message)
 
         builder.setPositiveButton(android.R.string.yes) { _, _ ->
             removeContact()
         }
 
         builder.setNegativeButton(android.R.string.no) { _, _ ->
-            showToast("The contact is still here =)")
+            val cancel = this.getText(R.string.contact_removed_canceled) as String
+            showToast(cancel)
         }
 
         builder.show()
@@ -163,7 +161,8 @@ class ContactDetailActivity: AppCompatActivity() {
             databaseHandler.deleteContact(it.id)
         }
 
-        showToast("Contact removed successfully!")
+        val success = this.getText(R.string.contact_removed_success) as String
+        showToast(success)
         dismissActivity()
     }
 
@@ -250,7 +249,7 @@ class ContactDetailActivity: AppCompatActivity() {
                 startActivity(intent)
             }
         } else {
-            Toast.makeText(this@ContactDetailActivity, "Enter Phone Number", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@ContactDetailActivity, R.string.call_error_empty_phone, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -262,10 +261,9 @@ class ContactDetailActivity: AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == requestCall) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                makePhoneCall()
-                Toast.makeText(this, "Permission ALLOWED, CALL AGAIN", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.call_permission_granted, Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.call_permission_denied, Toast.LENGTH_SHORT).show()
             }
         }
     }

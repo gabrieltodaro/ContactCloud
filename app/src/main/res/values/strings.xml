@@ -1,8 +1,24 @@
 <resources>
     <string name="app_name">Contact Cloud</string>
     <string name="add_contact_to_the_list">Add Contact to the list.</string>
-    <string name="call_to_the_contact">Call to the Contact</string>
     <string name="call">Call</string>
+    <string name="call_to_the_contact">Call to the Contact</string>
+    <string name="call_error_empty_phone">Enter Phone Number</string>
+    <string name="call_permission_granted">Permission allowed, you can call now.</string>
+    <string name="call_permission_denied">"Permission denied, you can not call.</string>
     <string name="contact_detail_full_name">Full Name</string>
     <string name="contact_detail_content_description_full_name">Contact Full Name</string>
+    <string name="contact_added">Contact added successfully!</string>
+    <string name="contact_updated">Contact updated successfully!</string>
+    <string name="contact_removed_success">Contact removed successfully!</string>
+    <string name="contact_removed_canceled">The contact is still here =)</string>
+    <string name="contact_remove_alert_title">Removing contact</string>
+    <string name="contact_remove_alert_message">Do you really want to remove this contact?</string>
+    <string name="edit_image">Edit Image</string>
+    <string name="contact_nickname">Contact Nickname</string>
+    <string name="nickname">Nickname</string>
+    <string name="contact_phone">Contact Phone</string>
+    <string name="phone">Phone</string>
+    <string name="contact_email">Contact Email</string>
+    <string name="email">E-mail</string>
 </resources>
