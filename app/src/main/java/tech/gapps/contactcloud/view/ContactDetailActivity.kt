@@ -263,6 +263,7 @@ class ContactDetailActivity: AppCompatActivity() {
         if (requestCode == requestCall) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, R.string.call_permission_granted, Toast.LENGTH_SHORT).show()
+                makePhoneCall(contact!!)
             } else {
                 Toast.makeText(this, R.string.call_permission_denied, Toast.LENGTH_SHORT).show()
             }
